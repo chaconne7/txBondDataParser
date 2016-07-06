@@ -52,9 +52,29 @@ rdDF4 = rdDF3.dropna(subset=['Govt ID #'])
 rdDF5 = rdDF4.fillna(0)
 #print(rdDF5)
 
-#rdDF5.to_csv('bondDataTest.csv', sep=',')
+#--------------- LEASE-PURCHASE OBLIGATION ----------------
 
-frames = [tdDF5, rdDF5]
+lpDF1 = xls_file.parse('Lease Purchase')
+
+# delete first seven rows
+lpDF2 = lpDF1.ix[6:]
+
+# insert year column and name columns                                                                                                            
+lpDF2.insert(3,'Year','2015')
+lpDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'L-P Obligation Principal Outstanding as of 8/31/14', 'L-P Obligation Interest Outstanding as of 8/31/14', 'L-P Obligation Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: L-P Obligation Per Capita', 'Debt Ratio: L-P Obligation Per Student Headcount']
+
+# reshape dataset                                                                                                                                
+lpDF3 = pd.melt(lpDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['L-P Obligation Principal Outstanding asof 8/31/14', 'L-P Obligation Interest Outstanding as of 8/31/14', 'L-P Obligation Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: L-P Obligation Per Capita', 'Debt Ratio: L-P Obligation Per Student Headcount'])
+
+# get rid of NaN rows                                                                                                                            
+lpDF4 = lpDF3.dropna(subset=['Govt ID #'])
+
+# fill in non-null values with 0                                                                                                                  
+lpDF5 = lpDF4.fillna(0)
+#print(rdDF5)                
+
+#--------------- CONCATENATION -------------------------------                          
+frames = [tdDF5, rdDF5, lpDF5]
 concatDF = pd.concat(frames)
 concatDF.to_csv('concatDataTest.csv', sep=',')
 #print(concatDF)
