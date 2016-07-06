@@ -50,4 +50,11 @@ rdDF4 = rdDF3.dropna(subset=['Govt ID #'])
 #print(tdDF4)                                                                                                                                      
 # fill in non-null values with 0                                                                                                                  
 rdDF5 = rdDF4.fillna(0)
-print(rdDF5)
+#print(rdDF5)
+
+#rdDF5.to_csv('bondDataTest.csv', sep=',')
+
+frames = [tdDF5, rdDF5]
+concatDF = pd.concat(frames)
+concatDF.to_csv('concatDataTest.csv', sep=',')
+#print(concatDF)
