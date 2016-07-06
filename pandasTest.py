@@ -1,80 +1,81 @@
 import pandas as pd
 import numpy as np
-
-# generalize by putting in a for loop and making year in xls_file and df insert statement an index
-xls_file = pd.ExcelFile('TX Bond Data/TX CCD Data/15CCDTRLP.xls')
-xls_file.sheet_names
+import os
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-tdDF1 = xls_file.parse('Tax-Supported Debt')
+for folder in os.listdir('TX Bond Data'):
+    if not folder.startswith('.'):
+        for file in os.listdir('TX Bond Data/%s' % folder):
+            if not file.startswith('.'):
+               print('TX Bond Data/%s/%s'% (folder, file))
+               xls_file = pd.ExcelFile('TX Bond Data/%s/%s'% (folder, file))
 
-# delete first seven rows
-tdDF2 = tdDF1.ix[6:]
+               tdDF1 = xls_file.parse('Tax-Supported Debt')
 
-# insert year column and name columns
-tdDF2.insert(3,'Year','2015')
-tdDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'Tax-Supported Debt Principal Outstanding as of 8/\
-31/14','Tax-Supported Debt Interest Outstanding as of 8/31/14','Tax-Supported Debt Service Outstanding as of 8/31/14','2013 M&O Tax Rate','2013 I&S Tax Rate','2013 TOTAL Tax Rate','2013 Tax Year Assessed Valuation (AV)','Taxing District Population','Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: Tax Debt to Assessed Valuation (AV)','Debt Ratio: Tax Debt Service to AV','Debt Ratio: Tax Debt Per Capita','Debt Ratio: Tax Debt Per Student Headcount']
+               # delete first seven rows
+               tdDF2 = tdDF1.ix[6:]
 
-# reshape dataset
-tdDF3 = pd.melt(tdDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['Tax-Supported Debt Principal Outstanding as of 8/31/14','Tax-Supported Debt Interest Outstanding as of 8/31/14','Tax-Supported Debt Service Outstanding as of 8/31/14','2013 M&O Tax Rate','2013 I&S Tax Rate','2013 TOTAL Tax Rate','2013 Tax Year Assessed Valuation (AV)','Taxing District Population','Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: Tax Debt to Assessed Valuation (AV)','Debt Ratio: Tax Debt Service to AV','Debt Ratio: Tax Debt Per Capita','Debt Ratio: Tax Debt Per Student Headcount'])
+               # insert year column and name columns
+               tdDF2.insert(3,'Year','2015')
+               tdDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'Tax-Supported Debt Principal Outstanding as of 8/31/14','Tax-Supported Debt Interest Outstanding as of 8/31/14','Tax-Supported Debt Service Outstanding as of 8/31/14','2013 M&O Tax Rate','2013 I&S Tax Rate','2013 TOTAL Tax Rate','2013 Tax Year Assessed Valuation (AV)','Taxing District Population','Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: Tax Debt to Assessed Valuation (AV)','Debt Ratio: Tax Debt Service to AV','Debt Ratio: Tax Debt Per Capita','Debt Ratio: Tax Debt Per Student Headcount']
 
-# get rid of NaN rows
-tdDF4 = tdDF3.dropna(subset=['Govt ID #'])
+               # reshape dataset
+               tdDF3 = pd.melt(tdDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['Tax-Supported Debt Principal Outstanding as of 8/31/14','Tax-Supported Debt Interest Outstanding as of 8/31/14','Tax-Supported Debt Service Outstanding as of 8/31/14','2013 M&O Tax Rate','2013 I&S Tax Rate','2013 TOTAL Tax Rate','2013 Tax Year Assessed Valuation (AV)','Taxing District Population','Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: Tax Debt to Assessed Valuation (AV)','Debt Ratio: Tax Debt Service to AV','Debt Ratio: Tax Debt Per Capita','Debt Ratio: Tax Debt Per Student Headcount'])
 
-#print(tdDF4)
+               # get rid of NaN rows
+               tdDF4 = tdDF3.dropna(subset=['Govt ID #'])
 
-# fill in non-null values with 0
-tdDF5 = tdDF4.fillna(0)
 
-#print(tdDF5)
+               # fill in non-null values with 0
+               tdDF5 = tdDF4.fillna(0)
 
-#---------------- REVENUE DEBT ---------------------------
-rdDF1 = xls_file.parse('Revenue Debt')
+               #---------------- REVENUE DEBT ---------------------------
+               rdDF1 = xls_file.parse('Revenue Debt')
 
-# delete first seven rows                                                                                                                         
-rdDF2 = rdDF1.ix[6:]
+               # delete first seven rows
+               rdDF2 = rdDF1.ix[6:]
 
-# insert year column and name columns                                                                                                            
-rdDF2.insert(3,'Year','2015')
-rdDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'Revenue Debt Principal Outstanding as of 8/31/14', 'Revenue Debt Interest Outstanding as of 8/31/14', 'Revenue Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex', 'Debt Ratio: Revenue Debt per Capita', 'Debt Ratio: Revenue Debt Per Student Headcount']
+               # insert year column and name columns
+               rdDF2.insert(3,'Year','2015')
+               rdDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'Revenue Debt Principal Outstanding as of 8/31/14', 'Revenue Debt Interest Outstanding as of 8/31/14', 'Revenue Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex', 'Debt Ratio: Revenue Debt per Capita', 'Debt Ratio: Revenue Debt Per Student Headcount']
 
-# reshape dataset                                                                                                                                  
-rdDF3 = pd.melt(rdDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['Revenue Debt Principal Outstanding as of 8/31/14', 'Revenue Debt Interest Outstanding as of 8/31/14', 'Revenue Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex', 'Debt Ratio: Revenue Debt per Capita', 'Debt Ratio: Revenue Debt Per Student Headcount'])
+               # reshape dataset
+               rdDF3 = pd.melt(rdDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['Revenue Debt Principal Outstanding as of 8/31/14', 'Revenue Debt Interest Outstanding as of 8/31/14', 'Revenue Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex', 'Debt Ratio: Revenue Debt per Capita', 'Debt Ratio: Revenue Debt Per Student Headcount'])
 
-# get rid of NaN rows                                                                                                                            
-rdDF4 = rdDF3.dropna(subset=['Govt ID #'])
+               # get rid of NaN rows
+               rdDF4 = rdDF3.dropna(subset=['Govt ID #'])
 
-#print(tdDF4)                                                                                                                                      
-# fill in non-null values with 0                                                                                                                  
-rdDF5 = rdDF4.fillna(0)
-#print(rdDF5)
+               # fill in non-null values with 0
+               rdDF5 = rdDF4.fillna(0)
 
-#--------------- LEASE-PURCHASE OBLIGATION ----------------
+               #--------------- LEASE-PURCHASE OBLIGATION ----------------
 
-lpDF1 = xls_file.parse('Lease Purchase')
+               lpDF1 = xls_file.parse('Lease Purchase')
 
-# delete first seven rows
-lpDF2 = lpDF1.ix[6:]
+               # delete first seven rows
+               lpDF2 = lpDF1.ix[6:]
 
-# insert year column and name columns                                                                                                            
-lpDF2.insert(3,'Year','2015')
-lpDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'L-P Obligation Principal Outstanding as of 8/31/14', 'L-P Obligation Interest Outstanding as of 8/31/14', 'L-P Obligation Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: L-P Obligation Per Capita', 'Debt Ratio: L-P Obligation Per Student Headcount']
+               # insert year column and name columns
+               lpDF2.insert(3,'Year','2015')
+               lpDF2.columns = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year', 'L-P Obligation Principal Outstanding as of 8/31/14', 'L-P Obligation Interest Outstanding as of 8/31/14', 'L-P Obligation Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: L-P Obligation Per Capita', 'Debt Ratio: L-P Obligation Per Student Headcount']
 
-# reshape dataset                                                                                                                                
-lpDF3 = pd.melt(lpDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['L-P Obligation Principal Outstanding asof 8/31/14', 'L-P Obligation Interest Outstanding as of 8/31/14', 'L-P Obligation Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: L-P Obligation Per Capita', 'Debt Ratio: L-P Obligation Per Student Headcount'])
+               # reshape dataset
+               lpDF3 = pd.melt(lpDF2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['L-P Obligation Principal Outstanding asof 8/31/14', 'L-P Obligation Interest Outstanding as of 8/31/14', 'L-P Obligation Debt Service Outstanding as of 8/31/14', 'Taxing District Population', 'Student Headcount Fall 2013 + Spring 2014 Flex','Debt Ratio: L-P Obligation Per Capita', 'Debt Ratio: L-P Obligation Per Student Headcount'])
 
-# get rid of NaN rows                                                                                                                            
-lpDF4 = lpDF3.dropna(subset=['Govt ID #'])
+               # get rid of NaN rows
+               lpDF4 = lpDF3.dropna(subset=['Govt ID #'])
 
-# fill in non-null values with 0                                                                                                                  
-lpDF5 = lpDF4.fillna(0)
-#print(rdDF5)                
+               # fill in non-null values with 0
+               lpDF5 = lpDF4.fillna(0)
+               frames = [tdDF5, rdDF5, lpDF5]
+               concatDF = pd.concat(frames)
+               concatDF.to_csv('concatDataTest.csv', sep=',')
+               break
 
-#--------------- CONCATENATION -------------------------------                          
-frames = [tdDF5, rdDF5, lpDF5]
-concatDF = pd.concat(frames)
-concatDF.to_csv('concatDataTest.csv', sep=',')
+#--------------- CONCATENATION -------------------------------
+#frames = [tdDF5, rdDF5, lpDF5]
+#concatDF = pd.concat(frames)
+#concatDF.to_csv('concatDataTest.csv', sep=',')
 #print(concatDF)
