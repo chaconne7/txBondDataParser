@@ -47,16 +47,16 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     #df1.to_csv("yolotastic.csv", sep=',')
     
     # handle last rows
-    
+    df2 = df1[df1['Govt ID #'].notnull()]
+    df2.to_csv("fantasticbaby.csv", sep=',')
+    sys.exit()
 
-    # merge multi-row headings in columns 5 onward
-    df2 = merge_columns(df1)
-    
     # pivot columns 5-on
 
     # get rid of NaN rows
 
     # fill in non-null values with 0
+
 
 for folder in os.listdir('TX Bond Data'):
     if not folder.startswith('.'):
