@@ -16,7 +16,8 @@ for folder in os.listdir('TX Bond Data'):
     if not folder.startswith('.'):
         for file in os.listdir('TX Bond Data/%s' % folder):
             if not file.startswith('.'):
-                print file
-                print(get_year(file))
-                print file
-                print(get_district_type(file))
+                year = get_year(file)
+                district_type = get_district_type(file)
+                filepath = 'TX Bond Data/%s/%s' % (folder, file)
+                xls_file = pd.ExcelFile(filepath)
+                
