@@ -14,12 +14,6 @@ def get_year(filename):
 def get_gov_type(filename):
     return filename[4:-4]
 
-def merge_columns(df):
-    strJoin = lambda x:" ".join(x.astype(str))
-    dfmerged = df[0:6].apply(strJoin)
-    print(dfmerged)
-    return dfmerged
-    
 def flattenHierarchicalCol(col,sep = ' '):
     if not type(col) is tuple:
         return col
@@ -33,21 +27,28 @@ def flattenHierarchicalCol(col,sep = ' '):
         return new_col
 
 def clean_sheet(xls_file, sheet, year, gov_type):
-    # merge cells in all columns after first five?
-    # remove first six rows
-    df1 = xls_file.parse(sheet, header=[2,3,4,5,6]);
 
-    
+    # remove first six rows
+    df1 = xls_file.parse(sheet, header=[2,3,4,5,6], index_col=None)
+
     df1.columns = df1.columns.map(flattenHierarchicalCol)
-    mi = df1.columns
-    print("Values: " + ', '.join([str(x) for x in mi.values]))
-    df1.to_csv("testingworking.csv", sep=',')
-    sys.exit();
  
     # insert year and government type columns
-    df1.insert(3, 'Government Type', gov_type)
-    df1.insert(4, 'Year', year)
+    df1.insert(2, 'Government Type', gov_type)
+    df1.insert(3, 'Year', year)
+
+    # name first column and convert it from index to regular column
+    df1.index.name = 'Govt ID #'
+    df1.reset_index(level=0, inplace=True)
+
+    # debugging: print out column values
+    mi = df1.columns
+    print("Values: " + ', '.join([str(x) for x in mi.values]))
+    #df1.to_csv("yolotastic.csv", sep=',')
     
+    # handle last rows
+    
+
     # merge multi-row headings in columns 5 onward
     df2 = merge_columns(df1)
     
@@ -64,7 +65,7 @@ for folder in os.listdir('TX Bond Data'):
                 year = get_year(file)
                 gov_type = get_gov_type(file)
                 filepath = 'TX Bond Data/%s/%s' % (folder, file)
-                xls_file = pd.ExcelFile(filepath)
+                xls_file = pd.ExcelFile(filepath, index_col=None)
                 
                 # loop through each sheet in the file
                 for sheet in xls_file.sheet_names:
