@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import os
@@ -7,6 +6,7 @@ import sys
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
+# referenced this StackOverflow answer for flattening column: http://stackoverflow.com/a/29437514
 
 def get_year(filename):
     return filename[:4]
@@ -26,11 +26,10 @@ def flattenHierarchicalCol(col,sep = ' '):
     else:
         new_col = ''
         for leveli,level in enumerate(col):
-            if not level == '':
+            if not (level == '' or str(level).startswith("Unnamed")):
                 if not leveli == 0:
                     new_col += str(sep)
-                if not (str(sep).startswith("Unnamed")):
-                    new_col += str(level)
+                new_col += str(level)
         return new_col
 
 def clean_sheet(xls_file, sheet, year, gov_type):
@@ -42,6 +41,7 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     df1.columns = df1.columns.map(flattenHierarchicalCol)
     mi = df1.columns
     print("Values: " + ', '.join([str(x) for x in mi.values]))
+    df1.to_csv("testingworking.csv", sep=',')
     sys.exit();
  
     # insert year and government type columns
