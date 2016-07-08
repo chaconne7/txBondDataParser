@@ -52,7 +52,10 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     df3 = df2.rename(columns={' Issuer/Government Name':'Issuer/Government Name', ' County':'County'}) 
     df4 = pd.melt(df3, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
 
-    df4.to_csv("bangbangbang.csv", sep=',')
+    # fill in non-null values with 0                                                        \
+    df5 = df4.fillna(0)
+
+    df5.to_csv("baebae.csv", sep=',')
     sys.exit()
 
 
