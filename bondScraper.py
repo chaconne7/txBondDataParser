@@ -44,20 +44,19 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     # debugging: print out column values
     mi = df1.columns
     print("Values: " + ', '.join([str(x) for x in mi.values]))
-    #df1.to_csv("yolotastic.csv", sep=',')
     
     # handle last rows
     df2 = df1[df1['Govt ID #'].notnull()]
-    df2.to_csv("fantasticbaby.csv", sep=',')
-    sys.exit()
 
     # pivot columns 5-on
+    df3 = df2.rename(columns={' Issuer/Government Name':'Issuer/Government Name', ' County':'County'}) 
+    df4 = pd.melt(df3, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
 
-    # get rid of NaN rows
+    df4.to_csv("bangbangbang.csv", sep=',')
+    sys.exit()
 
-    # fill in non-null values with 0
 
-
+frames = []
 for folder in os.listdir('TX Bond Data'):
     if not folder.startswith('.'):
         for file in os.listdir('TX Bond Data/%s' % folder):
@@ -70,6 +69,8 @@ for folder in os.listdir('TX Bond Data'):
                 # loop through each sheet in the file
                 for sheet in xls_file.sheet_names:
                     df = clean_sheet(xls_file, sheet, year, gov_type)
-    
-                # concatenate to master sheet
-                
+                    frames.append(df)
+
+# concatenate for master sheet
+concatDF = pd.concat(frames) 
+concatDF.to_csv("masterTXBondData.csv", sep=',')               
