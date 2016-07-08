@@ -42,8 +42,8 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     df1.reset_index(level=0, inplace=True)
 
     # debugging: print out column values
-    mi = df1.columns
-    print("Values: " + ', '.join([str(x) for x in mi.values]))
+    #mi = df1.columns
+    #print("Values: " + ', '.join([str(x) for x in mi.values]))
     
     # handle last rows
     df2 = df1[df1['Govt ID #'].notnull()]
@@ -56,7 +56,8 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     df5 = df4.fillna(0)
 
     df5.to_csv("baebae.csv", sep=',')
-    sys.exit()
+    print("REACHED")
+    return df5
 
 
 frames = []
@@ -68,11 +69,15 @@ for folder in os.listdir('TX Bond Data'):
                 gov_type = get_gov_type(file)
                 filepath = 'TX Bond Data/%s/%s' % (folder, file)
                 xls_file = pd.ExcelFile(filepath, index_col=None)
-                
+                print(filepath)
                 # loop through each sheet in the file
                 for sheet in xls_file.sheet_names:
-                    df = clean_sheet(xls_file, sheet, year, gov_type)
-                    frames.append(df)
+                    if not (sheet == "Total Debt Outstanding"):
+                        df = clean_sheet(xls_file, sheet, year, gov_type)
+                        frames.append(df)
+                concatDF = pd.concat(frames)
+                concatDF = concatDF.to_csv('ccdDataTest.csv', sep=',')
+                sys.exit()
 
 # concatenate for master sheet
 concatDF = pd.concat(frames) 
