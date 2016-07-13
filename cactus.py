@@ -27,8 +27,17 @@ def merge_header_rows(df):
     df2 = df.ix[6:]
     return df2
     
+def drop_empty_rows(xls_file):
+    dftest = xls_file.parse(sheet, index_col=None, header=None)
+    dftest.dropna(how="all", inplace=True)
+    writer = pd.ExcelWriter('pandassimple.xlsx', engine='xlsxwriter')
+    dftest.to_excel(writer, sheet_name = 'Sheet1')
+    xls_file = pd.ExcelFile(filepath, index_col=None)
+    return xls_file
+
+
 def clean_sheet(xls_file, sheet, year, gov_type):
-    df1 = xls_file.parse(sheet, header = None, index_col = None)
+    df1 = drop_empty_rows(xls_file).parse(sheet, header = None, index_col = None)
 
     # drop first two rows
     df2 = df1.ix[2:]
@@ -59,19 +68,18 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     # fill in non-null values with 0
     df7 = df6.fillna(0)
 
-    df7.to_csv("baebae.csv", sep=',', encoding='utf-8')
+    df7.to_csv("baebae.csv", sep=",")
     print('REACHED')
-    sys.exit()
     return df7
 
 frames = []
 for folder in os.listdir('TX Bond Data'):
     if not folder.startswith('.'):
         for file in os.listdir('TX Bond Data/%s' % folder):
-            if not file.startswith('.') and not (get_gov_type(file) == "CNTY" or get_gov_type(file) == "HHD"):
-            #or get_gov_type(file) == "ISD"):
+            gov_type = get_gov_type(file)
+            if not file.startswith('.') and not (gov_type == "CCD"):
                 year = get_year(file)
-                gov_type = get_gov_type(file)
+#                gov_type = get_gov_type(file)
                 filepath = 'TX Bond Data/%s/%s' % (folder, file)
                 xls_file = pd.ExcelFile(filepath, index_col=None)
                 print(filepath)
