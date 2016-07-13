@@ -41,12 +41,12 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     df3.insert(3, 'Government Type', gov_type)
     df3.insert(4, 'Year', year)
 
-    df4 = df3.drop(df3.index[[6]])
-    df4.to_csv("peyroux.csv", sep=",")
-    print("REACHED")
+    df4 = df3.drop(6)
+    df4.to_csv("zico.csv", sep=",")
     sys.exit()
+
     # debugging: print out column values
-    mi = df3.columns
+    mi = df4.columns
     print("Values: " + ', '.join([str(x) for x in mi.values]))
 
     # handle last rows
