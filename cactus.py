@@ -36,32 +36,33 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     # merge headers
     df3 = merge_header_rows(df2)
 
+    # name first three columns
     df3.rename(columns={df3.columns.values[0]: 'Govt ID #', df3.columns.values[1]: 'Issuer/Government Name', df3.columns.values[2]: 'County'}, inplace=True)
 
+    # insert gov type and year columns
     df3.insert(3, 'Government Type', gov_type)
     df3.insert(4, 'Year', year)
 
+    # drop extra row
     df4 = df3.drop(6)
-    df4.to_csv("zico.csv", sep=",")
-    sys.exit()
 
     # debugging: print out column values
     mi = df4.columns
     print("Values: " + ', '.join([str(x) for x in mi.values]))
 
     # handle last rows
-    df3 = df3[df3['Govt ID #'].notnull()]
+    df5 = df4[df4['Govt ID #'].notnull()]
 
     # pivot columns 5-on
-   # df3 = df2.rename(columns={' Issuer/Government Name':'Issuer/Government Name', ' County':'County'})
-    df4 = pd.melt(df3, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
+    df6 = pd.melt(df5, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
 
     # fill in non-null values with 0
-    df5 = df4.fillna(0)
+    df7 = df6.fillna(0)
 
-    df5.to_csv("baebae.csv", sep=',', encoding='utf-8')
+    df7.to_csv("baebae.csv", sep=',', encoding='utf-8')
     print('REACHED')
-    return df3
+    sys.exit()
+    return df7
 
 frames = []
 for folder in os.listdir('TX Bond Data'):
