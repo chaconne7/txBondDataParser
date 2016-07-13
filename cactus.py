@@ -18,33 +18,27 @@ def get_gov_type(filename):
     return filename[4:-4]
 
 def merge_header_rows(df):
-    for i in range(3, len(df.columns) - 2):
+    for coli in range(0, len(df.columns) - 3):
         new_header_val = ''
-        for j in range(0, 5):
-            val = str(df.iat[j,i]).encode('utf-8')
+        for rowi in range(0, 5):
+            print "rowi: " + str(rowi) + " and coli: " + str(coli + 3)
+            val = str(df.iat[rowi,coli + 3]).encode('utf-8')
             if (val != "nan"):
                 new_header_val += val + " "
-        #df.iat[4,i] = new_header_val
-        df.rename(columns={df.columns.values[i]: new_header_val}, inplace=True)
-    df2 = df.ix[6:]
+        df.rename(columns={df.columns.values[coli + 3]: new_header_val}, inplace=True)
+    df.to_csv("lilia6.csv", sep=",")
+
+    df2 = df.iloc[5:]
     return df2
     
-def drop_empty_rows(xls_file):
-    dftest = xls_file.parse(sheet, index_col=None, header=None)
-    dftest.dropna(how="all", inplace=True)
-    writer = pd.ExcelWriter('pandassimple.xlsx', engine='xlsxwriter')
-    dftest.to_excel(writer, sheet_name = 'Sheet1')
-    xls_file = pd.ExcelFile(filepath, index_col=None)
-    return xls_file
-
-
 def clean_sheet(xls_file, sheet, year, gov_type):
     df1 = xls_file.parse(sheet, header = None, index_col = None)
 
+    # drop empty rows
     df1.dropna(how="all", inplace=True)
 
     # drop first two rows
-    df2 = df1.ix[2:]
+    df2 = df1.iloc[2:]
 
     # merge headers
     df3 = merge_header_rows(df2)
@@ -57,24 +51,25 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     df3.insert(4, 'Year', year)
 
     # drop extra row
-    df4 = df3.drop(6)
+    #df4 = df3.drop(6)
 
     # debugging: print out column values
-    mi = df4.columns
+    mi = df3.columns
     print("Values: " + ', '.join([str(x).encode('utf-8') for x in mi.values]))
 
     # handle last rows
-    df5 = df4[df4['Govt ID #'].notnull()]
+    df4 = df3[df3['Govt ID #'].notnull()]
 
+    df4.to_csv("chetan6.csv", sep=",")
+    sys.exit()
     # pivot columns 5-on
     df6 = pd.melt(df5, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
-
+    df6.to_csv("troyboi.csv", sep=",")
+    sys.exit()
     # fill in non-null values with 0
     df7 = df6.fillna(0)
 
     df8 = df7.ix[1:]
-    df8.to_csv("baebae.csv", sep=",")
-    sys.exit()
     print('REACHED')
     return df8
 
