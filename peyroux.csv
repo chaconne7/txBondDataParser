@@ -1,15 +1,10 @@
-,0,1,2,Government Type,Year,3,4,5,6,7,8,9,10,11,12,13,14,15
-2,,,,CCD,2003,,,,,,,,,,Debt Ratio,Debt Ratio,Debt Ratio,Debt Ratio
-3,,,,CCD,2003,Tax-Supported,Tax-Supported,Tax-Supported,,,,2002,,Student,Tax Debt,Tax,,Tax Debt
-4,,,,CCD,2003,Debt Principal,Debt Interest,Debt Service,2002,2002,2002,Tax Year,,Headcount -,to,Debt Service,Tax Debt,Per
-5,,,,CCD,2003,Outstanding,Outstanding,Outstanding,M&O,I&S,TOTAL,Assessed,,Fall 2002,Assessed,to,Per,Student
+,Govt ID #,Issuer/Government Name,County,Government Type,Year,Tax-Supported Debt Principal Outstanding as of 8/31/03 ,Tax-Supported Debt Interest Outstanding as of 8/31/03 ,Tax-Supported Debt Service Outstanding as of 8/31/03 ,2002 M&O Tax Rate ,2002 I&S Tax Rate ,2002 TOTAL Tax Rate ,2002 Tax Year Assessed Valuation (AV) ,Population ,Student Headcount - Fall 2002 +Spring Flex ,Debt Ratio Tax Debt to Assessed Valuation (AV) ,Debt Ratio Tax Debt Service to AV ,14,15
 6,Govt ID #,Issuer/Government Name,County,CCD,2003,as of 8/31/03,as of 8/31/03,as of 8/31/03,Tax Rate,Tax Rate,Tax Rate,Valuation (AV),Population,+Spring Flex,Valuation (AV),AV,Capita,Headcount
 7,015-201-15,Alamo CCD,BEXAR,CCD,2003,31364343.8,4707128.7,36071472.5,0.0923,0.0148,0.1071,53334094899,1392931,46087,0.0005880730489454331,0.0006763304518115358,22.51679645294706,680.5464404278864
 8,020-201-15,Alvin CCD,BRAZORIA,CCD,2003,,,,0.2553,0,0.2553,2571009764,111431,4579,0,0,0,0
 9,188-201-15,Amarillo JCD,POTTER-RANDALL,CCD,2003,18955000,6647150.04,25602150.04,0.12357,0.03264,0.15621,8354843112,193748,9380,0.0022687439783010493,0.0030643483901245036,97.83326795631439,2020.7889125799575
 10,003-201-15,Angelina County JCD,Angelina,CCD,2003,9875000,5251720,15126720,0.0787,0.0293,0.108,2679106339,80130,4979,0.0036859305867216643,0.005646181258204996,123.23723948583552,1983.329985940952
 11,227-201-15,Austin CCD,Travis-Williamson,CCD,2003,75000000,68417792.083,143417792.083,0.05,0,0.05,49628140514,652958,30867,0.0015112393739362983,0.002889848190917855,114.86190535991595,2429.7793760326563
-12,013-201-15,Bee County (Coastal Bend) College District,BEE,CCD,2003,,,,0.122,0,0.122,774983740,32359,3538,0,0,0,0
 13,020-202-15,Brazosport JCD,BRAZORIA,CCD,2003,,,,0.085,0,0.085,5398021390,61153,4191,0,0,0,0
 14,014-201-15,Central Texas College District,Bell-Coryell,CCD,2003,,,,0.1475,0,0.1475,3911148930,179846,13473,0,0,0,0
 15,067-201-15,Cisco JCD,EASTLAND,CCD,2003,,,,0.17016,0,0.17016,128535030,5008,3052,0,0,0,0

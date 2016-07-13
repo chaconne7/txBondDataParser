@@ -25,8 +25,6 @@ def merge_header_rows(df):
         #df.iat[4,i] = new_header_val
         df.rename(columns={df.columns.values[i]: new_header_val}, inplace=True)
     df2 = df.ix[6:]
-    df2.to_csv("ella.csv", sep=",")
-    sys.exit()
     return df2
     
 def clean_sheet(xls_file, sheet, year, gov_type):
@@ -38,14 +36,14 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     # merge headers
     df3 = merge_header_rows(df2)
 
-    df4 = df1.ix[2:]
-#    df4.rename(columns={df4.columns.values[0]: 'Govt ID #',
- #                       df4.columns.values[1]: 'Issuer/Government Name'}, inplace=True)
-    # insert year and government type columns
-    df4.insert(3, 'Government Type', gov_type)
-    df4.insert(4, 'Year', year)
+    df3.rename(columns={df3.columns.values[0]: 'Govt ID #', df3.columns.values[1]: 'Issuer/Government Name', df3.columns.values[2]: 'County'}, inplace=True)
 
+    df3.insert(3, 'Government Type', gov_type)
+    df3.insert(4, 'Year', year)
+
+    df4 = df3.drop(df3.index[[6]])
     df4.to_csv("peyroux.csv", sep=",")
+    print("REACHED")
     sys.exit()
     # debugging: print out column values
     mi = df3.columns
