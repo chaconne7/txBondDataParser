@@ -3,6 +3,8 @@ import numpy as np
 import os
 import sys
 from openpyxl.writer.excel import ExcelWriter
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -19,7 +21,7 @@ def merge_header_rows(df):
     for i in range(3, len(df.columns) - 2):
         new_header_val = ''
         for j in range(0, 5):
-            val = str(df.iat[j,i])
+            val = str(df.iat[j,i]).encode('utf-8')
             if (val != "nan"):
                 new_header_val += val + " "
         #df.iat[4,i] = new_header_val
@@ -37,7 +39,9 @@ def drop_empty_rows(xls_file):
 
 
 def clean_sheet(xls_file, sheet, year, gov_type):
-    df1 = drop_empty_rows(xls_file).parse(sheet, header = None, index_col = None)
+    df1 = xls_file.parse(sheet, header = None, index_col = None)
+
+    df1.dropna(how="all", inplace=True)
 
     # drop first two rows
     df2 = df1.ix[2:]
@@ -57,7 +61,7 @@ def clean_sheet(xls_file, sheet, year, gov_type):
 
     # debugging: print out column values
     mi = df4.columns
-    print("Values: " + ', '.join([str(x) for x in mi.values]))
+    print("Values: " + ', '.join([str(x).encode('utf-8') for x in mi.values]))
 
     # handle last rows
     df5 = df4[df4['Govt ID #'].notnull()]
@@ -68,16 +72,18 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     # fill in non-null values with 0
     df7 = df6.fillna(0)
 
-    df7.to_csv("baebae.csv", sep=",")
+    df8 = df7.ix[1:]
+    df8.to_csv("baebae.csv", sep=",")
+    sys.exit()
     print('REACHED')
-    return df7
+    return df8
 
 frames = []
 for folder in os.listdir('TX Bond Data'):
     if not folder.startswith('.'):
         for file in os.listdir('TX Bond Data/%s' % folder):
             gov_type = get_gov_type(file)
-            if not file.startswith('.') and not (gov_type == "CCD"):
+            if not file.startswith('.') and not (gov_type == "CCD" or gov_type == "HHD" or gov_type == "CNTY" or gov_type == "OSD" or gov_type == "WD" or gov_type == "ISD"):
                 year = get_year(file)
 #                gov_type = get_gov_type(file)
                 filepath = 'TX Bond Data/%s/%s' % (folder, file)
@@ -88,7 +94,7 @@ for folder in os.listdir('TX Bond Data'):
                     if not (sheet == "Total Debt Outstanding"):
                         df = clean_sheet(xls_file, sheet, year, gov_type)
                         frames.append(df)
-
+                        
 # concatenate for master sheet
 concatDF = pd.concat(frames)
 concatDF.to_csv("masterTXBondData.csv", sep=',')
