@@ -24,7 +24,7 @@ def addSheet(debtType, xls_file):
     
      # reshape dataset
      df3 = pd.melt(df2, id_vars = ['Govt ID #', 'Issuer/Government Name', 'County', 'Year'], value_vars = ['Tax-Supported Debt Principal Outstanding as of 8/31/14','Tax-Supported Debt Interest Outstanding as of 8/31/14','Tax-Supported Debt Service Outstanding as of 8/31/14','2013 M&O Tax Rate','2013 I&S Tax Rate','2013 TOTAL Tax Rate','2013 Tax Year Assessed Valuation (AV)','Taxing District Population','Student HeadcountFall 2013 + Spring 2014 Flex','Debt Ratio: Tax Debt to Assessed Valuation (AV)','Debt Ratio: Tax Debt Service to AV','Debt Ratio: Tax Debt Per Capita','Debt Ratio: Tax Debt Per Student Headcount'])
-
+     
      # get rid of NaN rows                                                                                                               
      df4 = df3.dropna(subset=['Govt ID #']) 
 
