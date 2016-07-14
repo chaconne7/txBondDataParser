@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import os
 import sys
-from openpyxl.writer.excel import ExcelWriter
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -18,15 +17,15 @@ def get_gov_type(filename):
     return filename[4:-4]
 
 def merge_header_rows(df):
-    for coli in range(0, len(df.columns) - 3):
+    rows, cols, = df.shape
+    for coli in range(0, cols - 3):
         new_header_val = ''
         for rowi in range(0, 5):
-            print "rowi: " + str(rowi) + " and coli: " + str(coli + 3)
-            val = str(df.iat[rowi,coli + 3]).encode('utf-8')
+#            print "rowi: " + str(rowi) + " and coli: " + str(coli + 3)
+            val = str(df.iloc[rowi,coli + 3]).encode('utf-8')
             if (val != "nan"):
                 new_header_val += val + " "
         df.rename(columns={df.columns.values[coli + 3]: new_header_val}, inplace=True)
-    df.to_csv("lilia6.csv", sep=",")
 
     df2 = df.iloc[5:]
     return df2
@@ -54,31 +53,28 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     #df4 = df3.drop(6)
 
     # debugging: print out column values
-    mi = df3.columns
-    print("Values: " + ', '.join([str(x).encode('utf-8') for x in mi.values]))
+#    mi = df3.columns
+ #   print("Values: " + ', '.join([str(x).encode('utf-8') for x in mi.values]))
 
     # handle last rows
     df4 = df3[df3['Govt ID #'].notnull()]
 
-    df4.to_csv("chetan6.csv", sep=",")
-    sys.exit()
     # pivot columns 5-on
-    df6 = pd.melt(df5, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
-    df6.to_csv("troyboi.csv", sep=",")
-    sys.exit()
-    # fill in non-null values with 0
-    df7 = df6.fillna(0)
+    df5 = pd.melt(df4, id_vars=['Govt ID #', 'Issuer/Government Name', 'County', 'Government Type', 'Year'])
 
-    df8 = df7.ix[1:]
+    # fill in non-null values with 0
+    df6 = df5.fillna(0)
+
+    df7 = df6.ix[1:]
     print('REACHED')
-    return df8
+    return df7
 
 frames = []
 for folder in os.listdir('TX Bond Data'):
     if not folder.startswith('.'):
         for file in os.listdir('TX Bond Data/%s' % folder):
             gov_type = get_gov_type(file)
-            if not file.startswith('.') and not (gov_type == "CCD" or gov_type == "HHD" or gov_type == "CNTY" or gov_type == "OSD" or gov_type == "WD" or gov_type == "ISD"):
+            if not file.startswith('.'):
                 year = get_year(file)
 #                gov_type = get_gov_type(file)
                 filepath = 'TX Bond Data/%s/%s' % (folder, file)
@@ -86,7 +82,7 @@ for folder in os.listdir('TX Bond Data'):
                 print(filepath)
                 # loop through each sheet in the file
                 for sheet in xls_file.sheet_names:
-                    if not (sheet == "Total Debt Outstanding"):
+                    if not (sheet == "Total Debt Outstanding" or sheet == "Total"):
                         df = clean_sheet(xls_file, sheet, year, gov_type)
                         frames.append(df)
                         
