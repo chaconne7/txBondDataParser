@@ -21,7 +21,6 @@ def merge_header_rows(df):
     for coli in range(0, cols - 3):
         new_header_val = ''
         for rowi in range(0, 5):
-#            print "rowi: " + str(rowi) + " and coli: " + str(coli + 3)
             val = str(df.iloc[rowi,coli + 3]).encode('utf-8')
             if (val != "nan"):
                 new_header_val += val + " "
@@ -48,9 +47,6 @@ def clean_sheet(xls_file, sheet, year, gov_type):
     # insert gov type and year columns
     df3.insert(3, 'Government Type', gov_type)
     df3.insert(4, 'Year', year)
-
-    # drop extra row
-    #df4 = df3.drop(6)
 
     # debugging: print out column values
 #    mi = df3.columns
